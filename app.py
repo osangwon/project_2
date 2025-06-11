@@ -36,14 +36,20 @@ from matplotlib.patches import Wedge, Circle, Polygon
 
 
 # 나눔고딕 설정
-plt.rc('font', family='NanumGothic')
+# 나눔고딕 설정
+font_path = os.path.join(os.path.dirname(__file__), "data", "NanumGothic.ttf")
+if os.path.exists(font_path):
+    fm.fontManager.addfont(font_path)
+    plt.rc('font', family='NanumGothic')
+else:
+    plt.rc('font', family='Malgun Gothic')
 plt.rcParams['axes.unicode_minus'] = False  # 마이너스(-) 깨짐 방지
 
 # ─────────────────────────────────────────────────────────────────────────
 # 0) Static assets path
 # ─────────────────────────────────────────────────────────────────────────
 #static_path = os.path.join(os.path.dirname(__file__), "..", "www")
-static_path = os.path.join(os.path.dirname(__file__),".." ,"data")
+static_path = os.path.join(os.path.dirname(__file__),"data")
 
 
 # ───────────────────────────────────────────────────────────────────────────
@@ -139,11 +145,10 @@ else:
         df_all["datetime"] = pd.NaT
 
 df_all = df_all[df_all['mold_code'].isin([8722, 8412, 8917])]
-
 df_all = df_all.sort_values("datetime").reset_index(drop=True)
 
 # 분류 모델 로드 (경로를 실제 파일 위치로 바꿔주세요)
-model = joblib.load("data/best_model.pkl")
+model = joblib.load("data/best_model .pkl")
 
 # 품질 분석용 데이터 로드 (경로 수정 필요)
 try:
@@ -221,8 +226,8 @@ def generate_pdf_report(filtered_data, outliers, selected_variable, date_range):
             "C:/Windows/Fonts/gulim.ttc",       # 굴림
             "C:/Windows/Fonts/batang.ttc",      # 바탕
             "C:/Windows/Fonts/dotum.ttc",       # 돋움
-            "/System/Library/Fonts/AppleSDGothicNeo.ttc",  # Mac
-            "/usr/share/fonts/truetype/nanum/NanumGothic.ttf"  # Linux
+            #"/System/Library/Fonts/AppleSDGothicNeo.ttc",  # Mac
+            "C:/Users/qhrud/OneDrive/바탕 화면/project5/dashboard/data/NanumGothic.ttf"  # Linux
         ]
         
         font_registered = False
@@ -242,7 +247,7 @@ def generate_pdf_report(filtered_data, outliers, selected_variable, date_range):
         korean_font = 'Helvetica'
     
     # matplotlib 한글 폰트 설정
-    plt.rcParams['font.family'] = ['Malgun Gothic', 'AppleGothic', 'Nanum Gothic', 'DejaVu Sans']
+    plt.rcParams['font.family'] = ['Malgun Gothic', 'AppleGothic', 'NanumGothic', 'DejaVu Sans']
     plt.rcParams['axes.unicode_minus'] = False
     
     # PDF 문서 생성
@@ -422,9 +427,6 @@ IQR(Interquartile Range) 방법을 사용하여 몰드별 이상치를 탐지하
         story.append(stats_table)
     
     story.append(PageBreak())
-    
-    # 추가 섹션들은 원본 코드 그대로 이어서...
-    
     
     # === 2. 전체 이상치 분석 ===
     story.append(Paragraph("2. 전체 이상치 분석", section_style))
@@ -1334,7 +1336,7 @@ alert_modal = ui.modal(
 
                 # 기계 이미지 중앙
                 tags.img(
-                    src="data/image3.png",
+                    src="image3.png",
                     style="""
                       display: block;
                       margin: 0 auto;
@@ -1578,7 +1580,7 @@ tags.div(style="height: 12px;"),
           ui.card_header("실시간 상태"),
           tags.div(
             {"style":"position:relative;width:100%;height:49vh;"},
-            tags.img(src="data/image3.png",
+            tags.img(src="image3.png",
                      style="width:100%;height:100%;object-fit:contain;display:block;"),
             *[
               tags.div(
@@ -1606,7 +1608,7 @@ tags.div(style="height: 12px;"),
                   style="display:flex;flex-direction:column;"
                 ),
                 (ui.output_ui(delta_fn) if delta_fn else tags.div()),
-                style="background:#fff;border:1px solid #ddd;border-radius:6px;padding:6px 10px;margin-bottom:3px;height:110px;display:flex;justify-content:space-between;align-items:center;"
+                style="background:#fff;border:1px solid #ddd;border-radius:6px;padding:6px 10px;margin-bottom:3px;height:75px;display:flex;justify-content:space-between;align-items:center;"
               )
               for fn,delta_fn,label in [
                 ("avg_molten_temp_card","delta_molten_temp_ui","평균 용탕 온도 (℃)"),
@@ -1625,7 +1627,7 @@ tags.div(style="height: 12px;"),
                   style="display:flex;flex-direction:column;"
                 ),
                 (ui.output_ui(delta_fn) if delta_fn else tags.div()),
-                style="background:#fff;border:1px solid #ddd;border-radius:6px;padding:6px 10px;margin-bottom:3px;height:110px;display:flex;justify-content:space-between;align-items:center;"
+                style="background:#fff;border:1px solid #ddd;border-radius:6px;padding:6px 10px;margin-bottom:3px;height:75px;display:flex;justify-content:space-between;align-items:center;"
               )
               for fn,delta_fn,label in [
                 ("avg_low_speed_card","delta_low_speed_ui","평균 하단 구간 속도 (rpm)"),
@@ -1639,7 +1641,7 @@ tags.div(style="height: 12px;"),
             ui.card(
                             ui.card_header("알림창"),
                             ui.output_ui("alert_ui", container=tags.div, style="height:30vh; overflow-y:auto; padding:4px;"),
-                            style="margin:4px; height:30vh;"
+                            style="margin:4px; height:32vh;"
                         )
 
         )
